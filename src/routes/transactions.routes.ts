@@ -35,8 +35,8 @@ transactionsRouter.post('/', async (request, response) => {
       category,
     });
     response.json(transaction);
-  } catch (err) {
-    response.status(err.statusCode).json({ error: err.message });
+  } catch ({ message, statusCode }) {
+    response.status(statusCode).json({ message, status: 'error' });
   }
 });
 
