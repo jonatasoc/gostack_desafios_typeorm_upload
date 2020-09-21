@@ -23,6 +23,14 @@ class CreateTransactionService {
   }: Request): Promise<Transaction> {
     const transactionsRepository = getCustomRepository(TransactionsRepository);
 
+    // Impedindo que o Balance seja negativo
+
+    const balance = await transactionsRepository.getBalance();
+
+    if (type === 'outcome' && balance.total < value) {
+      throw new AppError('Balance is not enough for this transaction.');
+    }
+
     // Tratando Categorias, se já existem ou não no Banco
     const categoriesRepository = getRepository(Category);
 

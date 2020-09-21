@@ -15,7 +15,6 @@ transactionsRouter.get('/', async (request, response) => {
     relations: ['category'],
   });
   const balance = await transactionsRepository.getBalance();
-  console.log(balance);
 
   return response.json({
     transactions,
@@ -28,15 +27,17 @@ transactionsRouter.post('/', async (request, response) => {
 
   const createTransaction = new CreateTransactionService();
 
-  const transaction = await createTransaction.execute({
-    title,
-    value,
-    type,
-    category,
-  });
-
-  response.json(transaction);
-
+  try {
+    const transaction = await createTransaction.execute({
+      title,
+      value,
+      type,
+      category,
+    });
+    response.json(transaction);
+  } catch (err) {
+    response.status(err.statusCode).json({ error: err.message });
+  }
 });
 
 transactionsRouter.delete('/:id', async (request, response) => {
