@@ -63,10 +63,10 @@ transactionsRouter.post(
   upload.single('transactions'),
   async (request, response) => {
     const importTransactionService = new ImportTransactionsService();
+    const transactions = await importTransactionService.execute();
 
-    importTransactionService.execute();
-
-    return response.json();
-});
+    return response.json(transactions);
+  },
+);
 
 export default transactionsRouter;
